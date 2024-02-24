@@ -1,6 +1,6 @@
 # Ignore the entire folder structure
-readdatabrickstables/build
-readdatabrickstables/dist
-readdatabrickstables/old_dist
-readdatabrickstables/readdatabrickstables.egg-info
-readdatabrickstables/venv
+build
+dist
+old_dist
+readdatabrickstables.egg-info
+venv
