@@ -70,9 +70,9 @@ def query_databricks_tables_api(query, endpoint, token, warehouse_id):
 
     # GET DATA FROM EXTERNAL LINKS
     array_to_become_df = []
-    print(statement_current_state.json()["manifest"]["total_chunk_count"])
+    # print(statement_current_state.json()["manifest"]["total_chunk_count"])
     for n in range(statement_current_state.json()["manifest"]["total_chunk_count"]):
-        print(f"Current chunk: {n}!")
+        # print(f"Current chunk: {n}!")
         external_link = \
         requests.get(f'{api_url}{statement_id}/result/chunks/{n}', headers=headers).json()["external_links"][0][
             "external_link"]
@@ -81,5 +81,5 @@ def query_databricks_tables_api(query, endpoint, token, warehouse_id):
         # print(requests.get( external_link ).json())
 
     # RETURN PANDAS DATAFRAME
-    print(len(array_to_become_df))
+    # print(len(array_to_become_df))
     return pd.DataFrame(data=array_to_become_df, columns=columns)

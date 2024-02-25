@@ -20,7 +20,7 @@
 By installing this library, all the others required will be installed together.
 * pip install readdatabrickstables==0.0.5
 
-### Import the functions ( for Sql Connector and for Rest API ) needed
+### Import the functions needed
 * from readbktbls.connect_and_read import *
 * from readbktbls.connect_and_read_api import *
 

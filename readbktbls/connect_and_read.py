@@ -65,7 +65,7 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                     cluster_starting = response.json()["state"] != 'RUNNING'
                     print('Waiting, cluster still starting!')
             else:
-                print("All-purpose cluster not started, trying again!")
+                print("All-purpose cluster did not start, trying again!")
                 query_databricks_tables(query, cluster_type, endpoint, token, cluster_id)
         else:
             print("All-purpose cluster is running!")
@@ -89,9 +89,9 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                     time.sleep(120)
                     response = requests.get(warehouse_state_api, headers=headers)
                     warehouse_starting = response.json()["state"] != 'RUNNING'
-                    print('Waiting, cluster still starting!')
+                    print('Waiting, cluster is starting!')
             else:
-                print("Warehouse cluster not started, trying again!")
+                print("Warehouse cluster did not start, trying again!")
                 query_databricks_tables(query, cluster_type, endpoint, token, cluster_id)
         else:
             print("Warehouse cluster is running!")
@@ -115,7 +115,7 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                                cursor.columns(schema_name=schema, table_name=table).fetchall()]
 
                 # BUILD PANDAS DATAFRAME AND RETURN
-                #print("Return dataframe!")
+                print("Running query, waiting return!")
                 return pd.DataFrame(data=cursor.execute(query).fetchall(), columns=columns)
 
     ## HANDLE EXCEPTIONS ##
