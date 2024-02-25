@@ -1,6 +1,6 @@
 # Ignore the entire folder structure
 build
 dist
-old_dist
+dist_old
 readdatabrickstables.egg-info
 venv
