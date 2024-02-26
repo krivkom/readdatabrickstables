@@ -18,7 +18,7 @@
 
 ### Install the library
 By installing this library, all the others required will be installed together.
-* pip install readdatabrickstables==0.0.5
+* pip install readdatabrickstables==0.0.8
 
 ### Import the functions needed
 * from readbktbls.connect_and_read import *
