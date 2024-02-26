@@ -29,7 +29,11 @@ def query_databricks_tables_api(query, endpoint, token, warehouse_id):
     }
 
     ## API POST, RUN QUERY ##
-    response = requests.post(api_url, headers=headers, json=payload)
+    response = requests.post(
+        api_url,
+        headers=headers,
+        json=payload
+    )
 
     # CHECK RETURN
     if response.status_code == 200:
@@ -42,10 +46,12 @@ def query_databricks_tables_api(query, endpoint, token, warehouse_id):
 
     # CHECK STATE OF STATEMENT
     wait = True
-
     while wait:
         print('Waiting api return!')
-        statement_current_state = requests.get(f"{api_url}{statement_id}", headers=headers)
+        statement_current_state = requests.get(
+            f"{api_url}{statement_id}",
+            headers=headers
+        )
 
         # RAISE EXCEPTION IF SOME ISSUE OCCURED WITH THE STATEMENT
         if statement_current_state.json()["status"]["state"] in ('FAILED', 'CANCELED', 'CLOSED'):
@@ -57,7 +63,10 @@ def query_databricks_tables_api(query, endpoint, token, warehouse_id):
             )
         else:
             # CHECK IF CLUSTER IS RUNNING
-            cluster_current_state = requests.get(warehouse_state_api, headers=headers)
+            cluster_current_state = requests.get(
+                warehouse_state_api,
+                headers=headers
+            )
             if cluster_current_state.json()["state"] != 'RUNNING':
                 time.sleep(120)
             else:
@@ -74,12 +83,17 @@ def query_databricks_tables_api(query, endpoint, token, warehouse_id):
     for n in range(statement_current_state.json()["manifest"]["total_chunk_count"]):
         # print(f"Current chunk: {n}!")
         external_link = \
-        requests.get(f'{api_url}{statement_id}/result/chunks/{n}', headers=headers).json()["external_links"][0][
-            "external_link"]
+        requests.get(
+            f'{api_url}{statement_id}/result/chunks/{n}',
+            headers=headers
+        ).json()["external_links"][0]["external_link"]
         for row in requests.get(external_link).json():
             array_to_become_df.append(row)
         # print(requests.get( external_link ).json())
 
     # RETURN PANDAS DATAFRAME
     # print(len(array_to_become_df))
-    return pd.DataFrame(data=array_to_become_df, columns=columns)
+    return pd.DataFrame(
+        data=array_to_become_df,
+        columns=columns
+    )

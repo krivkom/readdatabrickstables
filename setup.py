@@ -16,6 +16,7 @@ setup(
     author="Mateus Esteves",
     author_email="<mestev17@its.jnj.com>",
     description=DESCRIPTION,
+    long_description="The goal of this library is to provide a flexible way to retrieve data from Databricks tables.",
     packages=find_packages(),
     install_requires=['databricks-sql-connector==2.9.4', 'pandas', 'requests'],
     keywords=['databricks', 'pandas', 'sql', 'table', 'python'],
