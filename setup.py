@@ -6,7 +6,7 @@ import time
 import requests
 
 
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 DESCRIPTION = 'Databricks connectors to read tables'
 
 # Setting up
