@@ -64,7 +64,7 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                     response = requests.get(cluster_state_api, headers=headers, params=params)
                     cluster_starting = response.json()["state"] != 'RUNNING'
                     print('Waiting, cluster is starting!')
-                time.sleep(60)
+                time.sleep(90)
                 print('Waiting, cluster is installing libraries!')
             else:
                 print("All-purpose cluster did not start, trying again!")
