@@ -18,11 +18,15 @@
 
 ### Install the library
 By installing this library, all the others required will be installed together.
-* pip install readdatabrickstables
+``` python
+pip install readdatabrickstables
+```
 
 ### Import the functions needed
-* from readbktbls.connect_and_read import *
-* from readbktbls.connect_and_read_api import *
+``` python
+from readbktbls.connect_and_read import *
+from readbktbls.connect_and_read_api import *
+```
 
 ### Use the functions
 Both functions returns a Pandas Data Frame
