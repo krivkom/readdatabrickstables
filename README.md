@@ -30,14 +30,20 @@ from readbktbls.connect_and_read_api import *
 
 ### Use the functions
 Both functions returns a Pandas Data Frame
-* **query_databricks_tables**(query, cluster_type, endpoint, token, cluster_id)
-  * **query**        = SQL Query in String format 
-  * **cluster_type** = "SQL" or "ALL-PURPOSE"
-  * **endpoint**     = Databricks endpoint, ex.: "adb-9999999999999999.9.azuredatabricks.net"
-  * **token**        = Your personal access token generated in the Databricks Workspace
-  * **cluster_id**   = "SQL" Warehouse Cluster ID or "All-Purpose" Cluster ID according to what was passed in the **cluster_type** argument, find in the cluster detail page
-* query_databricks_tables_api(query, endpoint, token, warehouse_id)
-  * **query**        = SQL Query in String format 
-  * **endpoint**     = Databricks endpoint, ex.: "adb-9999999999999999.9.azuredatabricks.net"
-  * **token**        = Your personal access token generated in the Databricks Workspace
-  * **cluster_id**   = "SQL" Warehouse Cluster ID, find in the cluster detail page
+
+``` python
+df = query_databricks_tables(query, cluster_type, endpoint, token, cluster_id)
+```
+* **query**        = SQL Query in String format 
+* **cluster_type** = "SQL" or "ALL-PURPOSE"
+* **endpoint**     = Databricks endpoint, ex.: "adb-9999999999999999.9.azuredatabricks.net"
+* **token**        = Your personal access token generated in the Databricks Workspace
+* **cluster_id**   = "SQL" Warehouse Cluster ID or "All-Purpose" Cluster ID according to what was passed in the **cluster_type** argument, find in the cluster detail page
+
+``` python
+df = query_databricks_tables_api(query, endpoint, token, warehouse_id)
+```
+* **query**        = SQL Query in String format 
+* **endpoint**     = Databricks endpoint, ex.: "adb-9999999999999999.9.azuredatabricks.net"
+* **token**        = Your personal access token generated in the Databricks Workspace
+* **cluster_id**   = "SQL" Warehouse Cluster ID, find in the cluster detail page
