@@ -15,7 +15,17 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
     pattern = re.compile(r'\bSELECT\b(.*?)\bFROM\b', re.DOTALL | re.IGNORECASE)
     splitted_string = [n.strip() for n in re.search(pattern, query).group(1).strip().split(",")]
     columns = []
+
     new_pattern = re.compile(r'\bAS\s+(.*?)$', re.IGNORECASE)
+    # For cases when you have more than one 'AS' in the query, ex.: select cast(col1 as int) as col1
+    for n in range(len(splitted_string)):
+        if len(re.findall('(?=( as ))', splitted_string[n])) > 1:
+            print(splitted_string[n])
+            if re.search(new_pattern, splitted_string[n]):
+                splitted_string[n] = re.search(new_pattern, splitted_string[n]).group(1).strip()
+            else:
+                pass
+    #  Append col names to col columns list
     for n in splitted_string:
         columns.append(re.search(new_pattern, n).group(1).strip()) if re.search(new_pattern, n) else columns.append(n)
     #print(columns)
