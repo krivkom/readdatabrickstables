@@ -4,6 +4,9 @@ import json
 import re
 import time
 import requests
+from sqlparse import parse
+from sqlparse.sql import Identifier, IdentifierList
+from sqlparse.tokens import DML, Punctuation, Wildcard
 
 
 def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
@@ -11,22 +14,60 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
     if not isinstance(query, str):
         raise Exception("Query needs to be a String Type!")
 
-    ## GET COLUMNS NAMES FROM QUERY ##
-    pattern = re.compile(r'\bSELECT\b(.*?)\bFROM\b', re.IGNORECASE | re.DOTALL)
+    ## GET COLUMN NAMES FROM QUERY USING SQLPARSE LIBRARY ##
+    # USE REGEX TO GET THE SELECT PART OF THE QUERY AND PROCESS WITH THE SQLPARSE LIBRARY LATER
+    pattern = re.compile(r'\b(.*?)\bFROM\b', re.IGNORECASE | re.DOTALL)
     select_part = re.search(pattern, query).group(1).strip()
 
-    splitted_string = [
-        col.strip().replace("\n", " ").strip() for col in re.split(r',(?![^(]*\))', select_part)
-    ]
-    # print(splitted_string)
+    parsed = parse(select_part)
 
-    new_pattern = re.compile(r'\bAS\s+(.*?)$', re.IGNORECASE)
-    columns = [
-        re.search(new_pattern, col).group(1).strip() if re.search(new_pattern, col) else col for col in splitted_string
-    ]
-    # print(columns)
+    columns = []
+
+    for statement in parsed:
+        if statement.get_type() == 'SELECT':
+            for item in statement.tokens:
+                if item.ttype is DML and item.value.upper() == 'SELECT':
+                    for token in item.parent.tokens:
+                        # IGNORE IF THE TOKEN IS WHITESPACE
+                        if token.is_whitespace or token.ttype in Punctuation:
+                            continue
+
+                        # APPEND THE STAR TO COLUMN LIST TO GET TABLE METADATA
+                        elif token.ttype is Wildcard and token.value == '*':
+                            columns.append(token.value)
+                            break
+
+                        # USE IdentifierList IF THE QUERY HAS MORE THAN ONE FIELD
+                        if isinstance(token, IdentifierList):
+                            for identifier in token.get_identifiers():
+
+                                if hasattr(identifier, 'get_alias'):
+                                    alias = identifier.get_alias()
+                                    if alias:
+                                        columns.append(alias)
+                                    else:
+                                        columns.append(identifier.get_real_name())
+                                else:
+                                    columns.append(identifier.get_real_name())
+
+                        # OTHERWISE Identifier, BECAUSE IT HAS ONLY ONE FIELD
+                        elif isinstance(token, Identifier):
+                            if hasattr(token, 'get_alias'):
+                                alias = token.get_alias()
+                                if alias:
+                                    columns.append(alias)
+                                else:
+                                    columns.append(token.get_real_name())
+                            else:
+                                columns.append(token.get_real_name())
+
+        else:
+            pass
+
+    print(columns)
 
     select_star = False
+
     # IF THE QUERY IS SELECT *, NEED TO GET METADATA FROM TABLE
     if len(columns) == 1 and columns[0] == '*':
         select_star = True

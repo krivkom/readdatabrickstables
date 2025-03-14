@@ -6,7 +6,7 @@ import time
 import requests
 
 
-VERSION = '0.1.4'
+VERSION = '0.1.5'
 DESCRIPTION = 'Databricks connectors to read tables'
 
 # Setting up
@@ -18,7 +18,7 @@ setup(
     description=DESCRIPTION,
     long_description="The goal of this library is to provide a flexible way to retrieve data from Databricks tables.",
     packages=find_packages(),
-    install_requires=['databricks-sql-connector==2.9.4', 'pandas==2.0.3', 'requests'],
+    install_requires=['databricks-sql-connector==2.9.4', 'pandas==2.0.3', 'requests', 'sqlparse==0.5.3'],
     keywords=['databricks', 'pandas', 'sql', 'table', 'python'],
     classifiers=[
         "Development Status :: 1 - Planning",
