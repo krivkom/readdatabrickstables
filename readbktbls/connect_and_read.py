@@ -10,6 +10,7 @@ from sqlparse.tokens import DML, Punctuation, Wildcard
 
 
 def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
+    access_token = token
     # STRING TYPE INPUT
     if not isinstance(query, str):
         raise Exception("Query needs to be a String Type!")
@@ -64,8 +65,6 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
         else:
             pass
 
-    print(columns)
-
     select_star = False
 
     # IF THE QUERY IS SELECT *, NEED TO GET METADATA FROM TABLE
@@ -83,7 +82,7 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
     ## REST API CONFIG ##
     endpoint_id = endpoint.split("-")[1].split(".")[0]
     headers = {
-        "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
     }
 
@@ -115,7 +114,7 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                 time.sleep(90)
             else:
                 print("All-purpose cluster did not start, trying again!")
-                query_databricks_tables(query, cluster_type, endpoint, token, cluster_id)
+                query_databricks_tables(query, cluster_type, endpoint, access_token, cluster_id)
         else:
             print("All-purpose cluster is running!")
 
@@ -141,7 +140,7 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                     print('Waiting, cluster is starting!')
             else:
                 print("Warehouse cluster did not start, trying again!")
-                query_databricks_tables(query, cluster_type, endpoint, token, cluster_id)
+                query_databricks_tables(query, cluster_type, endpoint, access_token, cluster_id)
         else:
             print("Warehouse cluster is running!")
 
@@ -151,10 +150,10 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
     ## RUN QUERY AND BUILD PANDAS DATA FRAME TO RETURN ##
     try:
         with sql.connect(
-                # DATABRICKS CONNECTION DETAILS
-                server_hostname=endpoint,
-                http_path=http_path,
-                access_token=token
+            # DATABRICKS CONNECTION DETAILS
+            server_hostname=endpoint,
+            http_path=http_path,
+            access_token=access_token
         ) as conn:
 
             with conn.cursor() as cursor:
