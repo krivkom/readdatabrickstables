@@ -4,7 +4,21 @@ import time
 import requests
 
 
-def query_databricks_tables_api(query, endpoint, token, warehouse_id):
+def query_databricks_tables_api(query: str, 
+                                endpoint: str, 
+                                token: str, 
+                                warehouse_id: str) -> pd.DataFrame:
+    """Performs SQL query on the specified Databricks SQL cluster (warehouse).
+
+    Args:
+        query (str): SQL query to be execusted.
+        endpoint (str): URL of the Databricks endpoint (without https://).
+        token (str): Access token.
+        warehouse_id (str): Warehouse ID.
+
+    Returns:
+        pandas.DataFrame: Pandas DataFrame containing the result of the SQL query.
+    """
     ## REST API CONFIG ##
     api = "/api/2.0/sql/statements/"
     api_url = f"https://{endpoint}{api}"

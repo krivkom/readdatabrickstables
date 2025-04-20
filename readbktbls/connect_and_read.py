@@ -9,7 +9,23 @@ from sqlparse.sql import Identifier, IdentifierList
 from sqlparse.tokens import DML, Punctuation, Wildcard
 
 
-def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
+def query_databricks_tables(query: str, 
+                            cluster_type: str, 
+                            endpoint: str, 
+                            token: str, 
+                            cluster_id: str) -> pd.DataFrame:
+    """Performs SQL query on the specified Databricks cluster.
+
+    Args:
+        query (str): SQL query to be executed.
+        cluster_type (str): Type of the Databricks cluster. Allowed values are: 'ALL-PURPOSE' and 'SQL'.
+        endpoint (str): URL of the Databricks endpoint (without https://).
+        token (str): Access token.
+        cluster_id (str): Cluster ID.
+
+    Returns:
+        pandas.DataFrame: Pandas DataFrame containing the result of the SQL query.
+    """
     access_token = token
     # STRING TYPE INPUT
     if not isinstance(query, str):
@@ -114,7 +130,11 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                 time.sleep(90)
             else:
                 print("All-purpose cluster did not start, trying again!")
-                query_databricks_tables(query, cluster_type, endpoint, access_token, cluster_id)
+                query_databricks_tables(query=query, 
+                                        cluster_type=cluster_type, 
+                                        endpoint=endpoint, 
+                                        token=access_token, 
+                                        cluster_id=cluster_id)
         else:
             print("All-purpose cluster is running!")
 
@@ -140,7 +160,11 @@ def query_databricks_tables(query, cluster_type, endpoint, token, cluster_id):
                     print('Waiting, cluster is starting!')
             else:
                 print("Warehouse cluster did not start, trying again!")
-                query_databricks_tables(query, cluster_type, endpoint, access_token, cluster_id)
+                query_databricks_tables(query=query, 
+                                        cluster_type=cluster_type, 
+                                        endpoint=endpoint, 
+                                        token=access_token, 
+                                        cluster_id=cluster_id)
         else:
             print("Warehouse cluster is running!")
 
